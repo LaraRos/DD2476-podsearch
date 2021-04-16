@@ -1,12 +1,14 @@
 const client = require('./connection.js');
 const INDEX = 'podcast_test'
 
+// Get health of elastic
 const getClusterHealth = () => {
     client.cluster.health({},function(err,resp,status) {  
         console.log("-- Client Health --",resp);
       });
 }
 
+// Fetch doc by id
 const getDocById = async (docId) => {
     console.info("Fetching document with id >>> " + docId + " <<<...")
     res = await client.search({
@@ -26,6 +28,7 @@ const getDocById = async (docId) => {
     return res
 }
 
+// Delete doc by id
 const deleteDocById = async (docId) => {
     console.info("Deleting document with id >>> " + docId + " <<<...")
     res = await client.delete({
@@ -37,8 +40,29 @@ const deleteDocById = async (docId) => {
     return res
 }
 
-const addDocById = async (docId, payload) => {
-    
+// Add doc without id
+const addDoc = async (body) => {
+    console.info("Adding document to index...")
+    res = await client.index({
+        index: INDEX,
+        body
+    }, function(err, resp, status) {
+        console.log(resp);
+    });
+    console.info("Success!")
+}
+
+// Add doc with id
+const addDocById = async (id, body) => {
+    console.info("Adding document to index...")
+    res = await client.index({
+        index: INDEX,
+        id,
+        body
+    }, function(err, resp, status) {
+        console.log(resp);
+    });
+    console.info("Success!")
 }
 
 const searchTranscript = async (transcript) => {
@@ -48,7 +72,7 @@ const searchTranscript = async (transcript) => {
         from: 0,
         query: {
           match: {
-              "results.alternatives.transcript": transcript
+              "data": transcript
           }
         }
       }
@@ -64,6 +88,8 @@ module.exports = {
     getClusterHealth,
     getDocById,
     searchTranscript,
-    deleteDocById
+    deleteDocById,
+    addDoc,
+    addDocById
 } 
 
