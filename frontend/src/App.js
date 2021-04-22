@@ -1,38 +1,21 @@
 import React from 'react';
 import {useState} from 'react';
 import ResultPage from './ResultPage.js'
+import SearchPage from './SearchPage.js'
+import Test from './Test.js'
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 function App() {
   const [queryString, setQueryString] = useState("")
   const [colors, setColors] = useState(['#4285F4','#DB4437','#F4B400','#4285F4','#0F9D58', '#DB4437'])
-  const [has_results, setHasResults] = useState(false);
-
-  return (
-    has_results? <ResultPage queryString={queryString} setQueryString={setQueryString} colors={colors}/> : 
-    <div className="App">
-      <div className="header">
-        {'PodcastSearch'.split('').map((c,i) => 
-        <span style={{color: colors[i%colors.length]}}>
-        {c}
-        </span>
-        )}
-      </div>
-      <form className="commentForm" onSubmit={(e) => {setHasResults(true);setQueryString(e.target.value)}}>
-        <input className="input"
-            type='text'
-            value={queryString}
-            onChange={(e) => setQueryString(e.target.value)}
-        />
-      </form>
-
-      <div className="infobox" type='text'>
-        Information for Podcast searchers!
-        <br/>Search for any content that you wish to find in a Podcast. We will
-        find the best possible match for you.
-      </div>
-    </div>
-  );
+  return(
+  <BrowserRouter>
+  <Switch>
+    <Route path="/search" render={() => {return <ResultPage queryString={queryString} setQueryString={setQueryString} colors={colors}/>}}/>
+    <Route path="" render={() => {return <SearchPage queryString={queryString} setQueryString={setQueryString} colors={colors}/>}} />
+  </Switch>
+</BrowserRouter>
+  )
 }
-
 
 export default App;

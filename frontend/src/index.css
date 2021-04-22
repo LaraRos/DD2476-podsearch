@@ -16,6 +16,19 @@ body {
   font-size:80px;
 }
 
+.grid-container {
+  display: grid;
+  grid-template-columns: [first] 20vw [line2] 70vw;
+  grid-gap: 1vw;
+  margin-top:3vh;
+}
+
+.resultheader{
+  margin-top:2vh;
+  font-family: 'Product Sans',serif;
+  font-size:40px;
+}
+
 .input{
   background-image: url(https://img.icons8.com/search);
   background-position: 7px 9px;
