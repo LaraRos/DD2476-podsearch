@@ -9,10 +9,52 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
 .header{
   margin-top:10vh;
   font-family: 'Product Sans',serif;
-  font-size:50px;
+  font-size:80px;
+}
+
+.input{
+  background-image: url(https://img.icons8.com/search);
+  background-position: 7px 9px;
+  background-repeat: no-repeat;
+  background-size: 3vh;
+  margin-top:3vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  height:5vh;
+  width: 70vw;
+  border-radius: 20px;
+  text-indent:6vh ;
+  border:5px;
+  -moz-box-shadow: 0 0 3px rgb(109, 109, 109);
+  -webkit-box-shadow: 0 0 3px rgb(122, 122, 122);
+  box-shadow: 0 0 3px rgb(117, 117, 117);
+}
+
+.infobox{
+  margin-top: 1vh;
+  font-size: 10px;
+  color:rgb(158, 158, 158);
+}
+
+input:focus {
+  outline:none;
+}
+
+.resultBox{
+  display: grid;
+  grid-column-gap: 50px;
+}
+
+input:hover {
+  -moz-box-shadow: 0 0 5px rgb(109, 109, 109);
+  -webkit-box-shadow: 0 0 5px rgb(122, 122, 122);
+  box-shadow: 0 0 5px rgb(117, 117, 117);
+  padding:2px;
 }
 
 code {
