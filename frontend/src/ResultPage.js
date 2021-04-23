@@ -1,17 +1,14 @@
-import React, {useState} from 'react';
+import React from 'react';
 import  { Redirect } from 'react-router-dom'
 import Logo from './Logo.js'
 import SearchField from './SearchField.js'
 
 function ResultPage({queryString, setQueryString, searchResult, setSearchResult}) {
-    const [redirect, setRedirect] = useState(false)
     const hits = searchResult.hits.hits
-
     return (
-        redirect ? <Redirect to={String('/dfdfs')} /> : 
         <div className="App">
             <div className="grid-container">
-                <div className="resultheader" onClick = {() => setRedirect(true)}>
+                <div className="resultheader">
                     <Logo/>
                 </div>
                 <div className="resultSearchField">
