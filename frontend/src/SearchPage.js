@@ -7,15 +7,15 @@ function SearchPage({queryString, setQueryString, searchResult, setSearchResult}
     return (
         searchResult !== "" ? <Redirect to={String('/search')} /> : 
         <div className="App">
-        <div className="header">
-            <Logo/>
-        </div>
-        <SearchField queryString={queryString} setQueryString={setQueryString} setSearchResult={setSearchResult}/>
-        <div className="infobox" type='text'>
-            Information for Podcast searchers!
-            <br/>Search for any content that you wish to find in a Podcast. We will
-            find the best possible match for you.
-        </div>
+            <div className="header">
+                <Logo/>
+            </div>
+                <SearchField queryString={queryString} setQueryString={setQueryString} setSearchResult={setSearchResult}/>
+            <div className="infobox" type='text'>
+                Information for Podcast searchers!
+                <br/>Search for any content that you wish to find in a Podcast. We will
+                find the best possible match for you.
+            </div>
         </div>
     );
 }
