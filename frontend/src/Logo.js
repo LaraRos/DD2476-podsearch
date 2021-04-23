@@ -1,5 +1,4 @@
 import React from 'react';
-import {useState} from 'react';
 
 function ResultPage() {
     const colors = ['#4285F4','#DB4437','#F4B400','#4285F4','#0F9D58', '#DB4437']
