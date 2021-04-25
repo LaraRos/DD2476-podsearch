@@ -26,6 +26,16 @@ app.get('/search', async (req, res) => {
     res.send(json)
 })
 
+app.get('/phrasesearch', async (req, res) => {
+    var json = await indexFunctions.searchTranscriptPhrase(req.query.string)
+    res.send(json)
+})
+
+app.get('/getpodcast', async (req, res) => {
+    var json = await indexFunctions.getPodcast(req.query.podcast)
+    res.send(json)
+})
+
 app.get('/delete', async (req, res) => {
     var json = await indexFunctions.deleteDocById(req.query.id)
     res.send(json)

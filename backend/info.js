@@ -84,11 +84,51 @@ const searchTranscript = async (transcript) => {
     return res
 }
 
+const searchTranscriptPhrase = async (transcript) => {
+    console.info("Phrase Searching transcripts with >>> " + transcript + " <<<...")
+    let body = {
+        size: 200,
+        from: 0,
+        query: {
+          match_phrase: {
+              "data": transcript
+          }
+        }
+      }
+    res = await client.search({
+        index: INDEX,
+        body: body
+    })
+    // .then(() => console.log("Success!")).catch((err) => console.trace(err.message))
+    return res
+}
+
+const getPodcast = async (podcast) => {
+    console.info("Searching transcripts with podcast id >>> " + podcast + " <<<...")
+    let body = {
+        size: 200,
+        from: 0,
+        query: {
+          match: {
+              "podcast_name": podcast
+          }
+        }
+      }
+    res = await client.search({
+        index: INDEX,
+        body: body
+    })//.sort(offset)
+    // .then(() => console.log("Success!")).catch((err) => console.trace(err.message))
+    return res
+}
+
 module.exports = { 
     getClusterHealth,
     getDocById,
     searchTranscript,
+    searchTranscriptPhrase,
     deleteDocById,
+    getPodcast,
     addDoc,
     addDocById
 } 
