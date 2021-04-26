@@ -1,15 +1,21 @@
 import React from 'react';
-
-function Logo() {
+//onClick={() => {setClickedButton(true); setSearchResult("")}}
+function Logo({setClickedButton, setSearchResult, className}) {
     const colors = ['#4285F4','#DB4437','#F4B400','#4285F4','#0F9D58', '#DB4437']
     return(
-        <div>
-            {'PoddSearch'.split('').map((c,i) => 
-            <span style={{color: colors[i%colors.length]}}>
+        <button className={className}
+            style={{
+                backgroundColor:"transparent",
+                border:"none"
+            }}
+            onClick={() => {}}
+        >
+            {'PodcastSearch'.split('').map((c,i) => 
+            <span key={i} style={{color: colors[i%colors.length]}}>
             {c}
             </span>
             )}
-        </div>
+        </button>
     )
 }
 

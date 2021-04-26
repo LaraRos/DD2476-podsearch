@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
 
 body {
-  background-color: white;
+  background-color: #fdfdff;
   text-align: center;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -18,23 +18,18 @@ body {
 
 .grid-container {
   display: grid;
-  grid-template-columns: [first] 20vw [line2] 70vw;
-  grid-gap: 1vw;
+  grid-template-columns: [first] 20vw [line2] 80vw [line2];
   margin-top:3vh;
 }
 
-.hits{
-  display: grid;
-  grid-auto-rows: 40vh;
-  grid-gap: 2vw;
-  padding-left:10vw;
-  padding-right:10vw;
-}
-
 .resultheader{
-  margin-top:2vh;
+  margin-top:1vh;
   font-family: 'Product Sans',serif;
   font-size:40px;
+}
+
+.resultheader:hover{
+  cursor: pointer;
 }
 
 .input{
@@ -47,7 +42,7 @@ body {
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   height:5vh;
-  width: 70vw;
+  width: 60vw;
   border-radius: 20px;
   text-indent:6vh ;
   border:5px;
@@ -64,6 +59,7 @@ body {
   border:5px;
   box-shadow: 0 0 3px rgb(117, 117, 117);
 }
+
 .infobox{
   margin-top: 1vh;
   font-size: 10px;
@@ -86,34 +82,101 @@ input:hover {
   padding:2px;
 }
 
+.hits{
+  display: grid;
+  grid-auto-rows: 30vh;
+  grid-gap: 0vw;
+  padding-left:15vw;
+  padding-right:20vw;
+}
+
+@media (max-width: 960px) {
+  .hits{
+    grid-auto-rows: 35vh;
+  }
+}
+
 .episode_grid {
   margin-top: 3vh;
   display: grid;
-  grid-template-rows: auto auto;
   border:5px;
+  grid-gap:1vh;
+  padding-left:1vw;
+  padding-right:1vw;
+  padding-top:3vh;
+  padding-bottom:3vh;
   border-radius: 20px;
   box-shadow: 0 0 3px rgb(117, 117, 117);
-  margin-bottom: 1vh;
+  background-color: transparent;
+  text-align: left;
+}
+
+.episode_grid:hover {
+  cursor: pointer;
 }
 
 .grid-item1 {
+  background-color: white;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  margin-top: 3vh;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .grid-item2 {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  text-align: center;
-  margin-left: 2vh;
-  margin-right: 2vh;
-  margin-bottom: 2vh,
+  color:blue;
+}
+
+.grid-item3 {
+  background-color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.total_podcast {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  margin-top: 5vh;
+  margin-left: 35vh;
+  margin-right:35vh;
+  border:5px solid rgb(195, 195, 195);
+  border-radius: 20px;
+  padding-left:4vw;
+  padding-right:4vw;
+  padding-top:4vh;
+  padding-bottom:4vh;
+  text-align: justify;
+}
+
+.total_pod_title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  margin-top: 5vh;
+  margin-left: 35vh;
+  margin-right:35vh;
+  border:5px solid rgb(195, 195, 195);
+  border-radius: 20px;
+  padding-left:4vw;
+  padding-right:4vw;
+  padding-top:4vh;
+  padding-bottom:4vh;
+  text-align: justify;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.switch{
+  width:5vw;
+  margin-left:1vw;
+  font-size:12px;
 }
