@@ -41,6 +41,11 @@ app.get('/getpodcastmetadata', async (req, res) => {
     res.send(json)
 })
 
+app.get('/getepisodemetadata', async (req, res) => {
+    var json = await indexFunctions.getEpisodeMetadata(req.query.episode)
+    res.send(json)
+})
+
 app.get('/delete', async (req, res) => {
     var json = await indexFunctions.deleteDocById(req.query.id)
     res.send(json)

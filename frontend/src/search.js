@@ -24,3 +24,9 @@ export const fetchPodcastMetadata = async (podcast) => {
     const res = await data.json()
     return res    
 }
+
+export const fetchEpisodeMetadata = async (episode) => {
+    const data = await fetch(ENDPOINT+"/getepisodemetadata?episode="+episode)
+    const res = await data.json()
+    return res    
+}

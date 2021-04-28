@@ -146,6 +146,27 @@ const getPodcastMetadata = async (podcast) => {
           }
         }
       }
+    let promise = (new Promise((resolve, reject) => {
+        client.search({
+        index: METADATA,
+        body: body
+        }).then(resolve).catch(reject)
+    }))//.sort(offset)
+    // .then(() => console.log("Success!")).catch((err) => console.trace(err.message))
+    return promise
+}
+
+const getEpisodeMetadata = async (episode) => {
+    console.info("Searching episodes with episode id >>> " + episode + " <<<...")
+    let body = {
+        size: 200,
+        from: 0,
+        query: {
+          match: {
+              "episode_name": episode
+          }
+        }
+      }
     res = await client.search({
         index: METADATA,
         body: body
