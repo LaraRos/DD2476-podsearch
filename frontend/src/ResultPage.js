@@ -72,7 +72,7 @@ function ResultPage({searchType, setSearchType, clickedButton, setClickedButton,
                         color:"silver",
                         fontSize:"12px"
                         }}>
-                        Found {hits.length} results ({searchResult?searchResult.took:0} seconds)
+                        Found {hits.length} results ({searchResult?(searchResult.took)/100:0} seconds)
                     </div>
                     <div className="hits">
                         {hits.length === 0 ? <div ></div> : hits.slice(0, Math.min(hits.length,maxNrHits)).map(h => <Podcast hit={h} queryString={queryString} clickedButton={clickedButton} setClickedButton={setClickedButton} podcastName={podcastName} setPodcastName={setPodcastName}/>)}
