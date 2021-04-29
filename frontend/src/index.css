@@ -181,3 +181,13 @@ code {
   margin-left:1vw;
   font-size:12px;
 }
+
+.bestPods{
+  display: grid;
+  grid-template-columns: [first] 20vw [line2] 20vw [line3] 20vw;
+  margin-left:8vw;
+  grid-gap:1vw;
+  width:55vw;
+  padding:5px;
+  overflow-y: scroll;
+}

@@ -18,7 +18,7 @@ function getIndicesOf(searchStr, str, caseSensitive) {
     return indices;
 }
 
-export const markKeyWords = (data, queryString, trim=true) => {
+export const markKeyWords = (data, queryString, phraseQuery=false, trim=true) => {
     if(queryString === ""){
         return []
     }
@@ -28,15 +28,15 @@ export const markKeyWords = (data, queryString, trim=true) => {
     const slice = getAllCharacters ? data.length : 300
     const data_slice = data.slice(0,slice)
 
-    const queryString_splitted = queryString.split(" ")
+    const queryString_splitted = phraseQuery? [queryString.trim()] :queryString.split(" ")
+
     const queryWords = queryString_splitted.filter((val, id) => queryString_splitted.indexOf(val) == id).map(q => q.toLowerCase())
     var ind = 0;
     const transcript_data = data_slice.toLowerCase()
-    queryWords.map(queryWord => {
+    queryWords.map(word => {
         var ind = 0;
         var start = -1
         var end = -1
-        const word = queryWord
         while((start = (transcript_data.slice(ind,data_slice.length)).indexOf(word)) != -1){
             end = start+word.length
             matches.push({start:ind+start, end:ind+end})

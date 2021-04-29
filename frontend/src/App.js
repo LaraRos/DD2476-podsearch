@@ -11,7 +11,6 @@ function App() {
   const [episodeResults, setEpisodeResults] = useState("");
   const [searchType, setSearchType] = useState("intersection")
   const [podcastName, setPodcastName] = useState("")
-
   return(
   <BrowserRouter>
     <Switch>

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import Logo from './Logo.js'
 import SearchField from './SearchField.js'
 import Podcast from './Podcast.js'
-import InputNumber from 'react-input-number'
+import {ScrollBox, ScrollAxes, FastTrack} from 'react-scroll-box';
 
 const merge_transcripts = (t1, t2, start_time, end_time) => {
     
@@ -40,15 +40,15 @@ function rank(hits) {
     var j;
     for (i = 0; i < hits.length; i++){
         if (hits[i]._source.podcast_name in dict) {
-            dict[hits[i]._source.podcast_name] += 1;
+            dict[i] += 1;
         } else {
-            dict[hits[i]._source.podcast_name] = 1;
+            dict[i] = 1;
         }
    }
 
    for (j = 0; j < nbr_relevant; j++){
         var max_key = Object.keys(dict).reduce(function(a, b){ return dict[a] > dict[b] ? a : b });
-        relevant.push(max_key);
+        relevant.push(hits[max_key]);
         dict[max_key] = 0;
    }
 
@@ -95,9 +95,8 @@ function ResultPage({searchType, setSearchType, clickedButton, setClickedButton,
     const [maxNrHits, setNrHits] = useState(10);
     const hits  = maybe_hits? formatHits(maybe_hits) : hits
 
-    const [num, setNum] = React.useState(4);
+    const [num, setNum] = React.useState(3);
     const best_Podcasts = bestPod(maybe_hits, num) 
-    console.log(best_Podcasts)
 
     return (
         <div className="App">
@@ -123,22 +122,23 @@ function ResultPage({searchType, setSearchType, clickedButton, setClickedButton,
                         color:"black",
                         fontSize:"12px"
                         }}> Number of best episodes : </div>
-                <InputNumber min={1} max={10} title="ms" step={0.03} value={num} onChange={setNum} />
-                <br/> <br/>  
-                </label>     
+                <select onChange={e => setNum(e.target.value)} >
+                    {[1,2,3,4,5,6,7,8,9,10].map(i => 
+                        <option selected={i==num? "selected" :""} key={i} value={i}>{i}</option>
+                    )}
+                </select>
+                </label>  
+                <h2>Best Podcasts </h2>
                 <div className="bestPods">
-                        Best episodes:
                         {best_Podcasts.length === 0 ? <div ></div> : 
                         best_Podcasts.map(pod => 
-                        <button className="episode_grid" onClick={() =>
-                         {setClickedButton(true); setPodcastName(pod)}}>
-                        <div className="grid-item1">{pod}</div>
-                    </button>
+                            <Podcast hit={pod} queryString={queryString} clickedButton={clickedButton} setClickedButton={setClickedButton} podcastName={podcastName} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>
                             )}
                 </div>
-                <br/> <br/>         
+                <br/> <br/>    
+                <hr></hr>     
                     <div className="hits">
-                        {hits.length === 0 ? <div ></div> : hits.slice(0, Math.min(hits.length,maxNrHits)).map(h => <Podcast hit={h} queryString={queryString} clickedButton={clickedButton} setClickedButton={setClickedButton} podcastName={podcastName} setPodcastName={setPodcastName}/>)}
+                        {hits.length === 0 ? <div ></div> : hits.slice(0, Math.min(hits.length,maxNrHits)).map(h => <Podcast hit={h} queryString={queryString} clickedButton={clickedButton} setClickedButton={setClickedButton} podcastName={podcastName} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>)}
                     </div>
                     {maxNrHits > hits.length ? "" : 
                     <button className="showMoreButton" onClick={() => {setNrHits(maxNrHits + 10)}}>
