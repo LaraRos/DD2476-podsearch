@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Logo from './Logo.js'
 import SearchField from './SearchField.js'
 import Podcast from './Podcast.js'
+import InputNumber from 'react-input-number'
 
 const merge_transcripts = (t1, t2, start_time, end_time) => {
     
@@ -17,6 +18,42 @@ const merge_transcripts = (t1, t2, start_time, end_time) => {
 
     return res
 }
+
+function compare( a, b ) {
+    return b._score - a._score
+  }
+
+function rank(hits) {
+    var i;
+    const alpha = 0.8;
+    const beta = 0.2;
+    for (i = 0; i < hits.length; i++){
+        hits[i]._score = alpha*hits[i]._score + beta*hits[i]._source.confidence;
+   }
+   return hits.sort( compare )
+  }
+
+  function bestPod(hits, nbr_relevant) {
+    var dict= {};
+    var relevant = [];
+    var i;
+    var j;
+    for (i = 0; i < hits.length; i++){
+        if (hits[i]._source.podcast_name in dict) {
+            dict[hits[i]._source.podcast_name] += 1;
+        } else {
+            dict[hits[i]._source.podcast_name] = 1;
+        }
+   }
+
+   for (j = 0; j < nbr_relevant; j++){
+        var max_key = Object.keys(dict).reduce(function(a, b){ return dict[a] > dict[b] ? a : b });
+        relevant.push(max_key);
+        dict[max_key] = 0;
+   }
+
+   return relevant
+  }
 
 const formatHits = (hits) => {
     hits = hits.sort((a,b) => {
@@ -54,9 +91,14 @@ const formatHits = (hits) => {
 }
 
 function ResultPage({searchType, setSearchType, clickedButton, setClickedButton, queryString, setQueryString, searchResult, setSearchResult, podcastName, setPodcastName}) {
-    const maybe_hits = searchResult? searchResult.hits.hits: []
+    const maybe_hits = rank(searchResult? searchResult.hits.hits: [])
     const [maxNrHits, setNrHits] = useState(10);
     const hits  = maybe_hits? formatHits(maybe_hits) : hits
+
+    const [num, setNum] = React.useState(4);
+    const best_Podcasts = bestPod(maybe_hits, num) 
+    console.log(best_Podcasts)
+
     return (
         <div className="App">
             <div className="grid-container">
@@ -74,6 +116,27 @@ function ResultPage({searchType, setSearchType, clickedButton, setClickedButton,
                         }}>
                         Found {hits.length} results ({searchResult?searchResult.took:0} seconds)
                     </div>
+
+                <label>
+                <div style={{
+                        marginTop:"1vh",
+                        color:"black",
+                        fontSize:"12px"
+                        }}> Number of best episodes : </div>
+                <InputNumber min={1} max={10} title="ms" step={0.03} value={num} onChange={setNum} />
+                <br/> <br/>  
+                </label>     
+                <div className="bestPods">
+                        Best episodes:
+                        {best_Podcasts.length === 0 ? <div ></div> : 
+                        best_Podcasts.map(pod => 
+                        <button className="episode_grid" onClick={() =>
+                         {setClickedButton(true); setPodcastName(pod)}}>
+                        <div className="grid-item1">{pod}</div>
+                    </button>
+                            )}
+                </div>
+                <br/> <br/>         
                     <div className="hits">
                         {hits.length === 0 ? <div ></div> : hits.slice(0, Math.min(hits.length,maxNrHits)).map(h => <Podcast hit={h} queryString={queryString} clickedButton={clickedButton} setClickedButton={setClickedButton} podcastName={podcastName} setPodcastName={setPodcastName}/>)}
                     </div>
