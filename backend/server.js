@@ -36,6 +36,11 @@ app.get('/getpodcast', async (req, res) => {
     res.send(json)
 })
 
+app.get('/getepisode', async (req, res) => {
+    var json = await indexFunctions.getEpisode(req.query.episode)
+    res.send(json)
+})
+
 app.get('/getpodcastmetadata', async (req, res) => {
     var json = await indexFunctions.getPodcastMetadata(req.query.podcast)
     res.send(json)
