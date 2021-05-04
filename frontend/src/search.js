@@ -1,5 +1,5 @@
 // 
-const ENDPOINT = 'http://localhost:3001'
+const ENDPOINT = 'https://c28937b7423d.ngrok.io'
 
 export const fetchQuery = async (query) => {
     const data = await fetch(ENDPOINT+"/search?string="+query)
