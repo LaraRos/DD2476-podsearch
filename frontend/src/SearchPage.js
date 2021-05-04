@@ -3,12 +3,12 @@ import  { Redirect } from 'react-router-dom'
 import Logo from './Logo.js'
 import SearchField from './SearchField'
 
-function SearchPage({searchType, setSearchType, clickedButton, setClickedButton,queryString, setQueryString, searchResult, setSearchResult}) {
+function SearchPage({searchType, setSearchType,queryString, setQueryString, searchResult, setSearchResult}) {
     return (
         searchResult !== "" ? <Redirect to={String('/search')} /> : 
         <div className="App">
             <div className="header">
-                <Logo setClickedButton={setClickedButton} className="header"/>
+                <Logo className="header" resetParams={()=>{}}/>
             </div>
                 <SearchField setSearchType={setSearchType} searchType={searchType} queryString={queryString} setQueryString={setQueryString} setSearchResult={setSearchResult}/>
             <div className="infobox" type='text'>

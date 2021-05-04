@@ -2,7 +2,9 @@ import React, {useState} from 'react';
 import Logo from './Logo.js'
 import SearchField from './SearchField.js'
 import Podcast from './Podcast.js'
-import {ScrollBox, ScrollAxes, FastTrack} from 'react-scroll-box';
+import {Redirect} from 'react-router-dom'
+import {GrLinkNext} from 'react-icons/gr';
+import {GrLinkPrevious} from 'react-icons/gr';
 
 const merge_transcripts = (t1, t2, start_time, end_time) => {
     
@@ -46,7 +48,7 @@ function rank(hits) {
         }
    }
 
-   for (j = 0; j < nbr_relevant; j++){
+   for (j = 0; j < Math.min(nbr_relevant,hits.length); j++){
         var max_key = Object.keys(dict).reduce(function(a, b){ return dict[a] > dict[b] ? a : b });
         relevant.push(hits[max_key]);
         dict[max_key] = 0;
@@ -56,6 +58,9 @@ function rank(hits) {
   }
 
 const formatHits = (hits) => {
+    if(hits.length === 0){
+        return []
+    }
     hits = hits.sort((a,b) => {
         if(a._source.podcast_name === b._source.podcast_name){
             return 0
@@ -90,19 +95,25 @@ const formatHits = (hits) => {
     return hits_res
 }
 
-function ResultPage({searchType, setSearchType, clickedButton, setClickedButton, queryString, setQueryString, searchResult, setSearchResult, podcastName, setPodcastName}) {
-    const maybe_hits = rank(searchResult? searchResult.hits.hits: [])
+function ResultPage({searchType, setSearchType, queryString, setQueryString, searchResult, setSearchResult, podcastName, setPodcastName, resetParams}) {
     const [maxNrHits, setNrHits] = useState(10);
+    const [num, setNum] = React.useState(12);
+    
+    if(searchResult === undefined || searchResult == "" ){
+        searchResult = {took:0,hits:{hits:[]}}
+    }
+    const maybe_hits = rank(searchResult.hits.hits)
+
     const hits  = maybe_hits? formatHits(maybe_hits) : hits
-
-    const [num, setNum] = React.useState(3);
     const best_Podcasts = bestPod(maybe_hits, num) 
-
+    console.log(hits)
     return (
+        podcastName != "" ? <Redirect to={String('/episode/'+ podcastName)}/> :
+        searchResult == "" ? <Redirect to={String('')}/> :
         <div className="App">
             <div className="grid-container">
                 <div className="resultheader">
-                    <Logo setClickedButton={setClickedButton} setSearchResult={setSearchResult} className="resultheader"/>
+                    <Logo className="resultheader" resetParams={resetParams}/>
                 </div>
                 <div>
                     <div className="resultSearchField">
@@ -115,36 +126,29 @@ function ResultPage({searchType, setSearchType, clickedButton, setClickedButton,
                         }}>
                         Found {hits.length} results ({searchResult?(searchResult.took)/100:0} seconds)
                     </div>
-
-                <label>
-                <div style={{
-                        marginTop:"1vh",
-                        color:"black",
-                        fontSize:"12px"
-                        }}> Number of best episodes : </div>
-                <select onChange={e => setNum(e.target.value)} >
-                    {[1,2,3,4,5,6,7,8,9,10].map(i => 
-                        <option selected={i==num? "selected" :""} key={i} value={i}>{i}</option>
-                    )}
-                </select>
-                </label>  
-                <h2>Best Podcasts </h2>
-                <div className="bestPods">
-                        {best_Podcasts.length === 0 ? <div ></div> : 
-                        best_Podcasts.map(pod => 
-                            <Podcast hit={pod} queryString={queryString} clickedButton={clickedButton} setClickedButton={setClickedButton} podcastName={podcastName} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>
-                            )}
-                </div>
-                <br/> <br/>    
-                <hr></hr>     
-                    <div className="hits">
-                        {hits.length === 0 ? <div ></div> : hits.slice(0, Math.min(hits.length,maxNrHits)).map(h => <Podcast hit={h} queryString={queryString} clickedButton={clickedButton} setClickedButton={setClickedButton} podcastName={podcastName} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>)}
-                    </div>
-                    {maxNrHits > hits.length ? "" : 
-                    <button className="showMoreButton" onClick={() => {setNrHits(maxNrHits + 10)}}>
-                        View more
-                    </button>
-                    }
+                    {hits.length === 0 ? <div></div> : 
+                    <div>
+                        <h2>Top results </h2>
+                        <div style={{marginLeft:'8vw',display: 'grid',gridTemplateColumns:'55vw 5vw',gridGap:'1vw'}}>
+                            <div className="bestPods">
+                                    {best_Podcasts.length === 0 ? <div ></div> : 
+                                    best_Podcasts.map(pod => 
+                                        <Podcast hit={pod} queryString={queryString} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>
+                                        )}
+                            </div>
+                            <button onClick={() => num < 12 ? setNum(num+3) : "" }style={{backgroundColor:'transparent', border:'none'}}><GrLinkNext/></button>
+                        </div>
+                        <br/> <br/>    
+                        <hr></hr>     
+                        <div className="hits">
+                            {hits.length === 0 ? <div ></div> : hits.slice(0, Math.min(hits.length,maxNrHits)).map(h => <Podcast hit={h} queryString={queryString} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>)}
+                        </div>
+                        {maxNrHits > hits.length ? "" : 
+                        <button className="showMoreButton" onClick={() => {setNrHits(maxNrHits + 10)}}>
+                            View more
+                        </button>
+                        }
+                    </div>}
                 </div>
             </div>
         </div>

@@ -143,32 +143,23 @@ input:hover {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  margin-top: 5vh;
-  margin-left: 35vh;
-  margin-right:35vh;
-  border:5px solid rgb(195, 195, 195);
-  border-radius: 20px;
   padding-left:4vw;
   padding-right:4vw;
   padding-top:4vh;
   padding-bottom:4vh;
   text-align: justify;
+  border-radius: 10px;
 }
 
 .total_pod_title {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
   'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
   sans-serif;
-  margin-top: 5vh;
-  margin-left: 35vh;
-  margin-right:35vh;
-  border:5px solid rgb(195, 195, 195);
-  border-radius: 20px;
-  padding-left:4vw;
-  padding-right:4vw;
-  padding-top:4vh;
-  padding-bottom:4vh;
-  text-align: justify;
+  padding-right:15vw;
+  padding-left:5vw;
+  margin-top:5vh;
+  text-align: left;
+  min-height: 300px;
 }
 
 code {
@@ -184,10 +175,16 @@ code {
 
 .bestPods{
   display: grid;
-  grid-template-columns: [first] 20vw [line2] 20vw [line3] 20vw;
-  margin-left:8vw;
+  grid-template-columns: repeat(12,20vw);
   grid-gap:1vw;
   width:55vw;
   padding:5px;
   overflow-y: scroll;
+  scroll-behavior: smooth;
+}
+
+.episodeInfo{
+  margin-left:15vw;
+  width:70vw;
+  text-align: center;
 }

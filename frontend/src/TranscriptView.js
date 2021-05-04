@@ -7,11 +7,11 @@ function TranscriptView({transcript, startTime, endTime}){
     const endTime_s = parseInt(end%60)
     return <div style={{
         display: 'grid',
-        gridTemplateColumns: "[first] 45vw [line2] 10vw [line2]",
+        gridTemplateColumns: "[first] 10vw [line2] 45vw [line2]",
         gridGap:"2vw"
         }}>
-          <div>{transcript} </div>  
           <div style={{color:"blue", marginTop:"2vh"}}> {startTime_m}:{startTime_s}</div>
+          <div>{transcript} </div>  
           <br/>
     </div>
 }
