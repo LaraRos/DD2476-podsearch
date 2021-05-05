@@ -61,6 +61,7 @@ const formatHits = (hits) => {
     if(hits.length === 0){
         return []
     }
+
     hits = hits.sort((a,b) => {
         if(a._source.podcast_name === b._source.podcast_name){
             return 0
@@ -72,6 +73,7 @@ const formatHits = (hits) => {
             return -1
         }
     })
+
     let hits_res = []
     let last_trans = hits[0]
     for(let i=1; i<hits.length;i++){
@@ -91,7 +93,7 @@ const formatHits = (hits) => {
         }
     }
     hits_res.push(last_trans)
-    hits_res.sort((a,b) => a._score < b._score)
+    hits_res.sort((a,b) => a._score > b._score)
     return hits_res
 }
 
@@ -105,7 +107,8 @@ function ResultPage({searchType, setSearchType, queryString, setQueryString, sea
     const maybe_hits = rank(searchResult.hits.hits)
 
     const hits  = maybe_hits? formatHits(maybe_hits) : hits
-    const best_Podcasts = bestPod(maybe_hits, num) 
+    //const hits  = maybe_hits? maybe_hits : hits
+    const best_Podcasts = bestPod(maybe_hits, num)
     console.log(hits)
     return (
         podcastName != "" ? <Redirect to={String('/episode/'+ podcastName)}/> :
