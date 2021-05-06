@@ -1,5 +1,6 @@
 const client = require('./connection.js');
 const INDEX = 'podcast_test'
+const METADATA = 'podcast_metadata'
 
 // Get health of elastic
 const getClusterHealth = () => {
@@ -65,6 +66,18 @@ const addDocById = async (id, body) => {
     console.info("Success!")
 }
 
+const addPodcastMetadataById = async (id, body) => {
+    console.info("Adding document to index...")
+    res = await client.index({
+        index: METADATA,
+        id,
+        body
+    }, function(err, resp, status) {
+        console.log(resp);
+    });
+    console.info("Success!")
+}
+
 const searchTranscript = async (transcript) => {
     console.info("Searching transcripts with >>> " + transcript + " <<<...")
     let body = {
@@ -122,6 +135,65 @@ const getPodcast = async (podcast) => {
     return res
 }
 
+const getPodcast = async (episode) => {
+    console.info("Searching episodes with episode id >>> " + episode + " <<<...")
+    let body = {
+        size: 200,
+        from: 0,
+        query: {
+          match: {
+              "episode_name": episode
+          }
+        }
+      }
+    res = await client.search({
+        index: INDEX,
+        body: body
+    })//.sort(offset)
+    // .then(() => console.log("Success!")).catch((err) => console.trace(err.message))
+    return res
+}
+
+const getPodcastMetadata = async (podcast) => {
+    console.info("Searching podcast metadata with podcast id >>> " + podcast + " <<<...")
+    let body = {
+        size: 200,
+        from: 0,
+        query: {
+          match: {
+              "podcast": podcast
+          }
+        }
+      }
+    let promise = (new Promise((resolve, reject) => {
+        client.search({
+        index: METADATA,
+        body: body
+        }).then(resolve).catch(reject)
+    }))//.sort(offset)
+    // .then(() => console.log("Success!")).catch((err) => console.trace(err.message))
+    return promise
+}
+
+const getEpisodeMetadata = async (episode) => {
+    console.info("Searching episodes with episode id >>> " + episode + " <<<...")
+    let body = {
+        size: 200,
+        from: 0,
+        query: {
+          match: {
+              "episode": episode
+          }
+        }
+      }
+    res = await client.search({
+        index: METADATA,
+        body: body
+    })//.sort(offset)
+    // .then(() => console.log("Success!")).catch((err) => console.trace(err.message))
+    return res
+}
+
 module.exports = { 
     getClusterHealth,
     getDocById,
@@ -130,6 +202,9 @@ module.exports = {
     deleteDocById,
     getPodcast,
     addDoc,
-    addDocById
+    addDocById,
+    addPodcastMetadataById,
+    getPodcastMetadata,
+    getEpisodeMetadata
 } 
 

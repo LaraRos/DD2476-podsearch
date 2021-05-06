@@ -36,6 +36,21 @@ app.get('/getpodcast', async (req, res) => {
     res.send(json)
 })
 
+app.get('/getepisode', async (req, res) => {
+    var json = await indexFunctions.getEpisode(req.query.episode)
+    res.send(json)
+})
+
+app.get('/getpodcastmetadata', async (req, res) => {
+    var json = await indexFunctions.getPodcastMetadata(req.query.podcast)
+    res.send(json)
+})
+
+app.get('/getepisodemetadata', async (req, res) => {
+    var json = await indexFunctions.getEpisodeMetadata(req.query.episode)
+    res.send(json)
+})
+
 app.get('/delete', async (req, res) => {
     var json = await indexFunctions.deleteDocById(req.query.id)
     res.send(json)
