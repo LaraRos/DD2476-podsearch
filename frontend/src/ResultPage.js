@@ -7,32 +7,33 @@ import {GrLinkNext} from 'react-icons/gr';
 import {GrLinkPrevious} from 'react-icons/gr';
 
 const merge_transcripts = (t1, t2, start_time, end_time) => {
-    
-    const res = {
-        _score:Math.max(t1._score, t2._score),
-        _source:{
-            data: t1._source.data + t2._source.data,
-            podcast_name:t1._source.podcast_name,
-            start:String(start_time+"s"),
-            end:String(end_time+"s")
-        }
-    }
+    let res = t1
+    res._source._score = Math.max(t1._score, t2._score)
+    res._source._data = t1._source.data + t2._source.data
+    res._source._start = String(start_time+"s")
+    res._source._end = String(end_time+"s")
 
     return res
 }
-
-function compare( a, b ) {
-    return b._score - a._score
-  }
 
 function rank(hits) {
     var i;
     const alpha = 0.8;
     const beta = 0.2;
     for (i = 0; i < hits.length; i++){
-        hits[i]._score = alpha*hits[i]._score + beta*hits[i]._source.confidence;
-   }
-   return hits.sort( compare )
+        hits[i]._finalscore = alpha*hits[i]._score + beta*hits[i]._source.confidence;
+    }
+    return hits.sort((a,b) => {
+        if(a._finalscore > b._finalscore){
+            return 1
+        }
+        else if(a._finalscore < b._finalscore){
+            return -1
+        }
+        else{
+            return 0
+        }
+    })
   }
 
   function bestPod(hits, nbr_relevant) {
@@ -61,7 +62,6 @@ const formatHits = (hits) => {
     if(hits.length === 0){
         return []
     }
-
     hits = hits.sort((a,b) => {
         if(a._source.podcast_name === b._source.podcast_name){
             return 0
@@ -73,7 +73,6 @@ const formatHits = (hits) => {
             return -1
         }
     })
-
     let hits_res = []
     let last_trans = hits[0]
     for(let i=1; i<hits.length;i++){
@@ -93,7 +92,17 @@ const formatHits = (hits) => {
         }
     }
     hits_res.push(last_trans)
-    hits_res.sort((a,b) => a._score > b._score)
+    hits_res = hits_res.sort((a,b) => {
+        if(a._score < b._score){
+            return 1
+        }
+        else if(a._score > b._score){
+            return -1
+        }
+        else{
+            return 0
+        }
+    })
     return hits_res
 }
 
@@ -105,11 +114,9 @@ function ResultPage({searchType, setSearchType, queryString, setQueryString, sea
         searchResult = {took:0,hits:{hits:[]}}
     }
     const maybe_hits = rank(searchResult.hits.hits)
-
     const hits  = maybe_hits? formatHits(maybe_hits) : hits
-    //const hits  = maybe_hits? maybe_hits : hits
-    const best_Podcasts = bestPod(maybe_hits, num)
-    console.log(hits)
+    const best_Podcasts = bestPod(hits, num)
+
     return (
         podcastName != "" ? <Redirect to={String('/episode/'+ podcastName)}/> :
         searchResult == "" ? <Redirect to={String('')}/> :
@@ -134,10 +141,10 @@ function ResultPage({searchType, setSearchType, queryString, setQueryString, sea
                         <h2>Top results </h2>
                         <div style={{marginLeft:'8vw',display: 'grid',gridTemplateColumns:'55vw 5vw',gridGap:'1vw'}}>
                             <div className="bestPods">
-                                    {best_Podcasts.length === 0 ? <div ></div> : 
-                                    best_Podcasts.map(pod => 
-                                        <Podcast hit={pod} queryString={queryString} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>
-                                        )}
+                                {best_Podcasts.length === 0 ? <div ></div> : 
+                                best_Podcasts.map(pod => 
+                                    <Podcast hit={pod} queryString={queryString} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>
+                                    )}
                             </div>
                             <button onClick={() => num < 12 ? setNum(num+3) : "" }style={{backgroundColor:'transparent', border:'none'}}><GrLinkNext/></button>
                         </div>
@@ -147,7 +154,7 @@ function ResultPage({searchType, setSearchType, queryString, setQueryString, sea
                             {hits.length === 0 ? <div ></div> : hits.slice(0, Math.min(hits.length,maxNrHits)).map(h => <Podcast hit={h} queryString={queryString} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>)}
                         </div>
                         {maxNrHits > hits.length ? "" : 
-                        <button className="showMoreButton" onClick={() => {setNrHits(maxNrHits + 10)}}>
+                        <button className="showMoreButton" disabled={maxNrHits+10<hits.length ? false : true} onClick={() => {setNrHits(maxNrHits + 10)}}>
                             View more
                         </button>
                         }
@@ -158,4 +165,5 @@ function ResultPage({searchType, setSearchType, queryString, setQueryString, sea
     );
 }
 
+/**Math.min(hits.length,maxNrHits) */
 export default ResultPage;
