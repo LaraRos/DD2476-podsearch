@@ -135,6 +135,25 @@ const getPodcast = async (podcast) => {
     return res
 }
 
+const getPodcast = async (episode) => {
+    console.info("Searching episodes with episode id >>> " + episode + " <<<...")
+    let body = {
+        size: 200,
+        from: 0,
+        query: {
+          match: {
+              "episode_name": episode
+          }
+        }
+      }
+    res = await client.search({
+        index: INDEX,
+        body: body
+    })//.sort(offset)
+    // .then(() => console.log("Success!")).catch((err) => console.trace(err.message))
+    return res
+}
+
 const getPodcastMetadata = async (podcast) => {
     console.info("Searching podcast metadata with podcast id >>> " + podcast + " <<<...")
     let body = {
@@ -163,7 +182,7 @@ const getEpisodeMetadata = async (episode) => {
         from: 0,
         query: {
           match: {
-              "episode_name": episode
+              "episode": episode
           }
         }
       }
@@ -185,6 +204,7 @@ module.exports = {
     addDoc,
     addDocById,
     addPodcastMetadataById,
-    getPodcastMetadata
+    getPodcastMetadata,
+    getEpisodeMetadata
 } 
 

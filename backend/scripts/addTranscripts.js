@@ -16,6 +16,7 @@ for (i = 0; i < files.length; i++) {
     const file = files[i]
     const data = JSON.parse(fs.readFileSync(folder + "/" + file));
     const numTranscripts = data.transcripts.length
+    const promises = []
     for (j = 0; j < numTranscripts; j++) {
         let newData = {
             podcast_name: data.podcast_name,
@@ -24,7 +25,12 @@ for (i = 0; i < files.length; i++) {
             end: data.transcripts[j].end,
             offset: j
         }
-        indexFunctions.addDocById(transcriptCount, newData)
+        // try {
+        //     await indexFunctions.addDocById(transcriptCount, newData)
+        // } catch (e) {
+        //     console.error(e)
+        // }
+        promises.push(indexFunctions.addDocById(transcriptCount, newData))
         transcriptCount = transcriptCount + 1
     }
     console.info("Logged " + count + " files")
