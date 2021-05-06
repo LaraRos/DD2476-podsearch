@@ -5,6 +5,7 @@ const folder = process.argv[2]
 const target = process.argv[3]
 const folderName = "/podcasts-no-audio-13GB/spotify-podcasts-2020/podcasts-transcripts"
 let temp = 0
+let count = 0
 
 const nextFiles = (currentFolder) => {
     return fs.readdirSync(currentFolder)
@@ -41,7 +42,7 @@ firstFolders.forEach(firstFolder => {
                     if (thirdFolder !== '.DS_Store') {
                         files = nextFiles(folder + folderName + "/" + firstFolder + "/" + secondFolder + "/" + thirdFolder)
                         files.forEach(file => {
-                            let newData = {podcast_name : file.substring(0, file.length - 5)}
+                            let newData = {episode_name : file.substring(0, file.length - 5), podcast_name : thirdFolder.substring(5, thirdFolder.length)}
                             console.log(file)
                             const data = JSON.parse(fs.readFileSync(folder + folderName + "/" + firstFolder + "/" + secondFolder + "/" + thirdFolder + "/" + file));
                             let transcripts = []
@@ -64,11 +65,7 @@ firstFolders.forEach(firstFolder => {
                             // console.log("writing... ")
                             const fileName = target + "/" + firstFolder + "/" + secondFolder + "/" + thirdFolder
 
-                            if (!fs.existsSync(target + "/" + temp)){
-                                console.log("creating new folder")
-                                fs.mkdirSync(target + "/" + temp);
-                            }
-                            writeToFile(newData, target + "/" + temp + "/" + file)
+                            writeToFile(newData, target + "/" + file)
                             count += count + 1
                             if (count == 10000) {
                                 temp = temp + 1
