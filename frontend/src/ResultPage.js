@@ -38,20 +38,23 @@ function rank(hits) {
 
   function bestPod(hits, nbr_relevant) {
     var dict= {};
+    var dict1= {};
     var relevant = [];
     var i;
     var j;
     for (i = 0; i < hits.length; i++){
-        if (hits[i]._source.podcast_name in dict) {
-            dict[i] += 1;
+        if (hits[i]._source.episode_name in dict) {
+            dict[hits[i]._source.episode_name] += 1;
         } else {
-            dict[i] = 1;
+            dict[hits[i]._source.episode_name] = 1;
+            dict1[hits[i]._source.episode_name] = i;
+
         }
    }
 
    for (j = 0; j < Math.min(nbr_relevant,hits.length); j++){
         var max_key = Object.keys(dict).reduce(function(a, b){ return dict[a] > dict[b] ? a : b });
-        relevant.push(hits[max_key]);
+        relevant.push(hits[dict1[max_key]]);
         dict[max_key] = 0;
    }
 
@@ -109,13 +112,13 @@ const formatHits = (hits) => {
 function ResultPage({searchType, setSearchType, queryString, setQueryString, searchResult, setSearchResult, podcastName, setPodcastName, resetParams}) {
     const [maxNrHits, setNrHits] = useState(10);
     const [num, setNum] = React.useState(12);
-    
+
     if(searchResult === undefined || searchResult == "" ){
         searchResult = {took:0,hits:{hits:[]}}
     }
     const maybe_hits = rank(searchResult.hits.hits)
     const hits  = maybe_hits? formatHits(maybe_hits) : hits
-    const best_Podcasts = bestPod(hits, num)
+    const best_Podcasts = bestPod(maybe_hits, num)
 
     return (
         podcastName != "" ? <Redirect to={String('/episode/'+ podcastName)}/> :
@@ -136,24 +139,24 @@ function ResultPage({searchType, setSearchType, queryString, setQueryString, sea
                         }}>
                         Found {hits.length} results ({searchResult?(searchResult.took)/100:0} seconds)
                     </div>
-                    {hits.length === 0 ? <div></div> : 
+                    {hits.length === 0 ? <div></div> :
                     <div>
                         <h2>Top results </h2>
                         <div style={{marginLeft:'8vw',display: 'grid',gridTemplateColumns:'55vw 5vw',gridGap:'1vw'}}>
                             <div className="bestPods">
-                                {best_Podcasts.length === 0 ? <div ></div> : 
-                                best_Podcasts.map(pod => 
+                                {best_Podcasts.length === 0 ? <div ></div> :
+                                best_Podcasts.map(pod =>
                                     <Podcast hit={pod} queryString={queryString} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>
                                     )}
                             </div>
                             <button onClick={() => num < 12 ? setNum(num+3) : "" }style={{backgroundColor:'transparent', border:'none'}}><GrLinkNext/></button>
                         </div>
-                        <br/> <br/>    
-                        <hr></hr>     
+                        <br/> <br/>
+                        <hr></hr>
                         <div className="hits">
                             {hits.length === 0 ? <div ></div> : hits.slice(0, Math.min(hits.length,maxNrHits)).map(h => <Podcast hit={h} queryString={queryString} setPodcastName={setPodcastName} phraseQuery={searchType==="phrase"}/>)}
                         </div>
-                        {maxNrHits > hits.length ? "" : 
+                        {maxNrHits > hits.length ? "" :
                         <button className="showMoreButton" disabled={maxNrHits+10<hits.length ? false : true} onClick={() => {setNrHits(maxNrHits + 10)}}>
                             View more
                         </button>
